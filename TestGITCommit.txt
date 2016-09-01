@@ -1,1 +1,2 @@
 TestGITCommit.txt
+Add my changes too
