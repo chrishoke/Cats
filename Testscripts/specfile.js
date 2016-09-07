@@ -17,8 +17,8 @@ describe('ECommerce Web App', function() {
 	browser.get('http://ecommerce.aisel.co/en/');
         browser.driver.manage().window().maximize();
 	});
-    
-/*    it('create a new account', function() {
+    	//Using Excel data
+        it('create a new account', function() {
         var dashboard = element(by.css('.dropdown.ng-scope>a'));
         clickfunction.Click(dashboard, "clicked on dashboard");
         var createAccount = element.all(by.css('.thumb')).get(0);
@@ -29,24 +29,16 @@ describe('ECommerce Web App', function() {
         sendkeys.SendKeyFunction(password, "entering data in password field", "1", "password");      
         var login = element(by.css('.dropdown.ng-scope>a'));
         clickfunction.Click(login, "clicked on " +login);
-    });*/
-
-	it('should select Products link', function() {
-		//browser.pause();
-        var email = element(by.xpath("//input[@id='signInEmail']"));
-        var password = element(by.xpath("//input[@id='signInPassword']"));
-        var login = element(by.xpath("//div/button[text()='Log In'][@class='btn btn-primary'][@type='submit']"));
-        var close = element(by.css('button[ng-click*="$dismiss"]'));
-	element(by.css('a[href="/en/products/"]')).click();
-	element(by.xpath('//a[@class="thumb ng-binding"]')).click();
-	expect(element(by.css('h2[class="ng-binding"]')).getText()).toEqual('Nike Baseball Hat 100');
-	element(by.css('button[class="btn btn-success"]')).click();
-	email.click();
+    });
+	//Using Sql queries
+	it('searches for product', function() {
+        var search = element(by.model('search'));
+        clickfunction.Click(search, "Search is clicked");
         readsql.executeQuery(conn, "select * from account", function(resultrows){
 		console.log("Rows: " + JSON.stringify(resultrows)); 
 		var data = readjson.readSqldataJson(resultrows, "1" , "username");
-		email.sendKeys(data);
+		sendkeys.SendKeySql(search, "Searching for royal", data);
 	});
-	});
+    });
 });
 	
