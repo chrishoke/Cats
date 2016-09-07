@@ -4,32 +4,17 @@
 
 describe('ECommerce Web App', function() {
 	
-    var clickfunction = require('../CommonUtils/Click.js');
-	var async = require('D:/TESTING/Protractor/npm-3.10.6/bin/node_modules/async');
+	var clickfunction = require('../CommonUtils/Click.js');
 	var sendkeys = require('../CommonUtils/SendKeys.js');
 	var readjson = require('../CommonUtils/ReadJson.js');
-	/*//var connectDatabase = new readsql();
-    
-    
-    //conn.next();
-    
-    console.log('sql command run');
-	
-   // console.log(conn.next().value);
-    
-    
-//    var query = readsql.executeQuery("select * from account");
-//    query.next();
-//    
-
-    //console.log(query.next().value);
-//	var disconn = readsql.disconnectSql(conn);
-   
-
-    //query.then(function(data){return data;});*/
+	var resultrows1 = {};
+	var flow = browser.controlFlow();
+    	var conn;
     
     beforeEach(function() {
-		browser.get('http://ecommerce.aisel.co/en/');
+	console.log('Connection Start');
+	conn = readsql.createConnection();
+	browser.get('http://ecommerce.aisel.co/en/');
         browser.driver.manage().window().maximize();
 	});
     
@@ -39,9 +24,9 @@ describe('ECommerce Web App', function() {
         var createAccount = element.all(by.css('.thumb')).get(0);
         clickfunction.Click(createAccount, "clicked on createAccount");
         var email = element(by.css('#registerEmail'));
-        sendkeys.SendKeyFunction(email, "entering data in email field", "SC1","TC1","Username");
+        sendkeys.SendKeyFunction(email, "entering data in email field", "1","username");
         var password = element(by.css('#registerPassword'));
-        sendkeys.SendKeyFunction(password, "entering data in password field", "SC1", "TC1", "Password");      
+        sendkeys.SendKeyFunction(password, "entering data in password field", "1", "password");      
         var login = element(by.css('.dropdown.ng-scope>a'));
         clickfunction.Click(login, "clicked on " +login);
     });*/
@@ -52,15 +37,16 @@ describe('ECommerce Web App', function() {
         var password = element(by.xpath("//input[@id='signInPassword']"));
         var login = element(by.xpath("//div/button[text()='Log In'][@class='btn btn-primary'][@type='submit']"));
         var close = element(by.css('button[ng-click*="$dismiss"]'));
-		element(by.css('a[href="/en/products/"]')).click();
-		element(by.xpath('//a[@class="thumb ng-binding"]')).click();
-	   
-		expect(element(by.css('h2[class="ng-binding"]')).getText()).toEqual('Nike Baseball Hat 100');
-		element(by.css('button[class="btn btn-success"]')).click();
-		email.click();
-        //console.log(query.next().value);
-		email.sendKeys(readjson.readSqldataJson("1" , "username"));
-		
+	element(by.css('a[href="/en/products/"]')).click();
+	element(by.xpath('//a[@class="thumb ng-binding"]')).click();
+	expect(element(by.css('h2[class="ng-binding"]')).getText()).toEqual('Nike Baseball Hat 100');
+	element(by.css('button[class="btn btn-success"]')).click();
+	email.click();
+        readsql.executeQuery(conn, "select * from account", function(resultrows){
+		console.log("Rows: " + JSON.stringify(resultrows)); 
+		var data = readjson.readSqldataJson(resultrows, "1" , "username");
+		email.sendKeys(data);
+	});
 	});
 });
 	
