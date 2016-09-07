@@ -1,9 +1,9 @@
 //Sendkeys function
-function SendKeyFunction(variable,message,scenario,testcase,columnName){
+    var readjson = require('../CommonUtils/ReadJson.js');
+    //For reading excel data only
     var readexceldata = require('../CommonUtils/ReadExcelData.js');
-	var readjson = require('../CommonUtils/ReadJson.js');
-    var readsql = require('../CommonUtils/ReadMysql.js');
     var json = readexceldata.readSheetDataIntoJson("./Testdata/Testdata.xlsx", "Sheet1");
+    
     //log
     var log4js = require('D:/TESTING/Protractor/npm-3.10.6/bin/node_modules/log4js');
     
@@ -20,14 +20,21 @@ function SendKeyFunction(variable,message,scenario,testcase,columnName){
            });
     
     var logger = log4js.getLogger('relative-logger');
-    //logger.debug("Some debug messages");
-    
+
+function SendKeyExcel(variable,message,scenario,testcase,columnName){
     variable.sendKeys((readjson.readTestdataJson(json, scenario, testcase, columnName))).
     then(function() {
     return logger.info(message);
+    });  
+}
+
+function SendKeySql(variable, message, result){
+    variable.sendKeys(result).
+    then(function() {
+        return logger.info(message);
     });
-    
 }
 module.exports = {
-    SendKeyFunction: SendKeyFunction
+    SendKeyExcel: SendKeyExcel,
+    SendKeySql: SendKeySql
 };
